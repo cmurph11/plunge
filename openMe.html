@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script lang="javascript" src="js/jquery-3.1.0.min.js"></script>
+	<script lang="javascript" src="js/d3.min.js"></script>
+
+	<style>
+		html, body {
+			padding: 0;
+			margin: 0;
+		}
+	</style>
+</head>
+<body>
+	
+	<script>
+		var dimension = 500;
+
+		var svg = d3.select('body').append('svg')
+			.attr('width', dimension)
+			.attr('height', dimension)
+			.style('background-color', '#000000');
+
+		// YOUR CODE SHOULD START HERE
+		/*
+		 * Name: Colin Murpy
+		 * Word: Plunge
+		 */
+
+                 svg.style('background-color', '#5A7E9F');
+
+		var rad = dimension/10
+
+		var jsonCircles = [
+ 			{ "x_axis": dimension/6, "y_axis": dimension/2, "radius": rad, "color" : '#F6C683' },
+ 			{ "x_axis": dimension/3, "y_axis": dimension/4, "radius": rad, "color" : '#D37199'},
+ 			{ "x_axis": 2*dimension/3, "y_axis": 3*dimension/4, "radius": rad, "color" : '#B1E078'},
+ 			{ "x_axis": 5*dimension/6, "y_axis": 4*dimension/5, "radius": rad, "color" : '#B24571'},
+ 			{ "x_axis": 3*dimension/5, "y_axis": dimension/2, "radius": rad, "color" : '#89BD4A'},
+                        { "x_axis": dimension/5, "y_axis": dimension/5, "radius": rad, "color" : '#CF9B51'},
+                        { "x_axis": 2*dimension/5, "y_axis": dimension/6, "radius": rad, "color" : '#932753'},
+                        { "x_axis": 4*dimension/5, "y_axis": 2*dimension/9, "radius": rad, "color" : '#D8D573'},
+                        { "x_axis": 4*dimension/5, "y_axis": dimension/7, "radius": rad, "color" : '#D5796F'}];
+
+
+		var circle_num = [Math.floor(Math.random() * jsonCircles.length)];
+		
+                // define circle attributes
+
+		var circle = svg.append("circle")
+	                 .attr("cx", jsonCircles[circle_num].x_axis)
+	                 .attr("cy", jsonCircles[circle_num].y_axis)
+	                 .attr("r", jsonCircles[circle_num].radius)
+	                 .attr("fill", jsonCircles[circle_num].color)
+	                 .on("mouseover", function(d) {
+		        	d3.select(this).style("cursor", "pointer")})
+		      	.on("mouseout", function(d) {
+		        	d3.select(this).style("cursor", "default")});
+
+
+                circle_num = Math.floor(Math.random() * jsonCircles.length);
+                var x_axis = jsonCircles[circle_num].x_axis;
+                var y_axis = jsonCircles[circle_num].y_axis;
+
+                circle.on("click", function () { 
+                        
+                        // append "ripple" circle; animate and remove on click
+                        var circle2 = svg.append("circle")
+                        .attr("cx", circle.attr("cx"))
+                        .attr("cy", circle.attr("cy"))
+                        .attr("r", rad)
+                        .style("stroke-width", rad/10)
+                        .style("stroke", '#ffffff')
+                        .style("stroke-opacity", .5)
+                        .style("fill", "none")
+                        .transition()
+                            .delay(Math.pow(1, 2.5) * 50)
+                            .duration(1000)
+                            .ease(d3.easeLinear)
+                        .attr("r", dimension/3)
+                        .style("stroke-opacity", 0);
+        
+                        // make original circle disappear after ripple
+                        svg.select("circle").transition()
+                                .attr("r", 0);
+                        
+                        // randomize next circle info
+                        var circle_num = [Math.floor(Math.random() * jsonCircles.length)];
+
+                        // move circle to new location, after disappeared
+                        svg.select("circle").transition()
+                                .delay(500)
+                                .attr("cx", jsonCircles[circle_num].x_axis)
+                                .attr("cy", jsonCircles[circle_num].y_axis)
+                                .style("fill", jsonCircles[circle_num].color);
+                        
+                        // circle re-emerges at new location
+                        svg.select("circle")
+                                .transition()
+                                .delay(1000)
+                                .attr("r", rad);
+
+            });
+
+		// YOUR CODE SHOULD END HERE
+	</script>
+</body>
+</html>
